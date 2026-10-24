@@ -1,67 +1,360 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>おみくじアプリ</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            text-align: center;
-            background: #f5f5f5;
-            margin-top: 100px;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>キラキラおみくじ</title>
 
-        h1 {
-            color: #d32f2f;
-        }
+<style>
+    * {
+        box-sizing: border-box;
+    }
 
-        button {
-            font-size: 20px;
-            padding: 10px 30px;
-            cursor: pointer;
-            border: none;
-            border-radius: 8px;
-            background: #ff9800;
-            color: white;
-        }
+    body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        font-family: "Arial", sans-serif;
+        text-align: center;
+        background: linear-gradient(
+            120deg,
+            #ffe1ef,
+            #fff5ad,
+            #c7f6ff,
+            #e8d6ff
+        );
+        background-size: 400% 400%;
+        animation: backgroundMove 9s ease infinite;
+    }
 
-        button:hover {
-            background: #f57c00;
+    @keyframes backgroundMove {
+        0%, 100% {
+            background-position: 0% 50%;
         }
+        50% {
+            background-position: 100% 50%;
+        }
+    }
 
-        #result {
-            margin-top: 40px;
-            font-size: 40px;
-            font-weight: bold;
-            color: #333;
+    .card {
+        position: relative;
+        z-index: 2;
+        width: min(90%, 430px);
+        padding: 45px 25px;
+        background: rgba(255,255,255,0.88);
+        border: 4px solid white;
+        border-radius: 30px;
+        box-shadow: 0 18px 45px rgba(255,100,150,0.2);
+    }
+
+    h1 {
+        font-size: 36px;
+        color: #ff579a;
+        text-shadow: 2px 3px #ffe1a5;
+        margin-top: 0;
+    }
+
+    .subtitle {
+        color: #a778a0;
+        margin-bottom: 30px;
+    }
+
+    .fortune-box {
+        height: 170px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff6d9;
+        border: 3px dashed #ffb6cf;
+        border-radius: 20px;
+        margin-bottom: 25px;
+    }
+
+    #result {
+        font-size: 53px;
+        font-weight: bold;
+        color: #ff69a6;
+        transition: transform 0.2s;
+    }
+
+    button {
+        font-size: 21px;
+        font-weight: bold;
+        color: white;
+        padding: 17px 35px;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        background: linear-gradient(
+            100deg,
+            #ff65a3,
+            #ffad55,
+            #ff65a3
+        );
+        background-size: 200%;
+        box-shadow: 0 7px 0 #e44e87;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+        transform: translateY(-3px) scale(1.04);
+        box-shadow: 0 10px 0 #e44e87;
+    }
+
+    button:active {
+        transform: translateY(5px);
+        box-shadow: 0 2px 0 #e44e87;
+    }
+
+    button:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+
+    .shaking {
+        animation: shake 0.12s infinite;
+    }
+
+    @keyframes shake {
+        0% { transform: rotate(-8deg) scale(1.05); }
+        50% { transform: rotate(8deg) scale(1.15); }
+        100% { transform: rotate(-8deg) scale(1.05); }
+    }
+
+    .reveal {
+        animation: reveal 0.7s ease-out;
+    }
+
+    @keyframes reveal {
+        0% {
+            transform: scale(0) rotate(-25deg);
+            opacity: 0;
         }
-    </style>
+        60% {
+            transform: scale(1.5) rotate(8deg);
+            opacity: 1;
+        }
+        100% {
+            transform: scale(1) rotate(0);
+        }
+    }
+
+    .special {
+        color: #ffaf00 !important;
+        text-shadow:
+            0 0 12px #ffe34a,
+            0 0 25px #ffb700;
+        animation: goldGlow 0.8s infinite alternate;
+    }
+
+    @keyframes goldGlow {
+        from {
+            transform: scale(1);
+            filter: brightness(1);
+        }
+        to {
+            transform: scale(1.12);
+            filter: brightness(1.3);
+        }
+    }
+
+    #message {
+        margin-top: 22px;
+        min-height: 24px;
+        color: #a56c94;
+        font-weight: bold;
+    }
+
+    .confetti {
+        position: fixed;
+        top: -20px;
+        pointer-events: none;
+        z-index: 10;
+        animation: fall linear forwards;
+    }
+
+    @keyframes fall {
+        from {
+            transform: translateY(-10vh) rotate(0deg);
+            opacity: 1;
+        }
+        to {
+            transform: translateY(110vh) rotate(900deg);
+            opacity: 0;
+        }
+    }
+
+    .flash {
+        position: fixed;
+        inset: 0;
+        background: white;
+        z-index: 8;
+        pointer-events: none;
+        animation: flashEffect 0.55s forwards;
+    }
+
+    @keyframes flashEffect {
+        0% { opacity: 0; }
+        20% { opacity: 0.9; }
+        100% { opacity: 0; }
+    }
+
+    @media (max-width: 480px) {
+        h1 { font-size: 30px; }
+        #result { font-size: 43px; }
+    }
+</style>
 </head>
+
 <body>
 
-<h1>🎋 おみくじ 🎋</h1>
+<div class="card">
+    <h1>🌸 キラキラおみくじ 🌸</h1>
+    <p class="subtitle">今日の運勢を占ってみよう！</p>
 
-<button onclick="drawFortune()">
-    おみくじを引く
-</button>
+    <div class="fortune-box">
+        <div id="result" aria-live="polite">？？？</div>
+    </div>
 
-<div id="result">？？？</div>
+    <button id="drawButton" onclick="drawFortune()">
+        ✨ おみくじを引く ✨
+    </button>
+
+    <div id="message">ボタンを押して運試し！</div>
+</div>
 
 <script>
+    const fortunes = [
+        "🎉 大吉",
+        "😊 中吉",
+        "🙂 小吉",
+        "😌 吉",
+        "😐 末吉",
+        "😅 凶",
+        "💀 大凶"
+    ];
+
+    const messages = [
+        "最高の運勢！素敵な一日になりそう！",
+        "いいことがたくさん起こるかも！",
+        "小さな幸せを見つけられそう！",
+        "穏やかで楽しい一日になりそう！",
+        "焦らず、自分のペースで進もう！",
+        "慎重に行動すれば大丈夫！",
+        "今日は無理せず、のんびり過ごそう！"
+    ];
+
+    let drawing = false;
+
     function drawFortune() {
-        const fortunes = [
-            "🎉 大吉",
-            "😊 中吉",
-            "🙂 小吉",
-            "😌 吉",
-            "😐 末吉",
-            "😅 凶",
-            "💀 大凶"
+        if (drawing) return;
+
+        drawing = true;
+
+        const result = document.getElementById("result");
+        const message = document.getElementById("message");
+        const button = document.getElementById("drawButton");
+
+        button.disabled = true;
+        result.className = "shaking";
+        message.textContent = "🌟 運命のおみくじを選んでいます...";
+
+        // 運勢を高速で切り替える
+        const shuffle = setInterval(() => {
+            const randomIndex = Math.floor(
+                Math.random() * fortunes.length
+            );
+            result.textContent = fortunes[randomIndex];
+        }, 75);
+
+        // 2秒後に結果発表
+        setTimeout(() => {
+            clearInterval(shuffle);
+
+            const index = Math.floor(
+                Math.random() * fortunes.length
+            );
+
+            result.className = "";
+            result.textContent = fortunes[index];
+            message.textContent = messages[index];
+
+            // 再アニメーションできるように再描画
+            void result.offsetWidth;
+            result.classList.add("reveal");
+
+            // 光の演出
+            createFlash();
+
+            // 紙吹雪
+            createConfetti(index === 0 ? 180 : 90);
+
+            // 大吉だけ金色の特別演出
+            if (index === 0) {
+                setTimeout(() => {
+                    result.classList.add("special");
+                }, 700);
+            }
+
+            button.disabled = false;
+            drawing = false;
+        }, 2000);
+    }
+
+    function createFlash() {
+        const flash = document.createElement("div");
+        flash.className = "flash";
+        document.body.appendChild(flash);
+
+        setTimeout(() => {
+            flash.remove();
+        }, 600);
+    }
+
+    function createConfetti(count) {
+        const colors = [
+            "#ff5fa2",
+            "#ffd23f",
+            "#62d9ff",
+            "#b391ff",
+            "#76e6a0",
+            "#ff954f"
         ];
 
-        const index = Math.floor(Math.random() * fortunes.length);
+        for (let i = 0; i < count; i++) {
+            const piece = document.createElement("div");
+            piece.className = "confetti";
 
-        document.getElementById("result").textContent = fortunes[index];
+            const size = Math.random() * 10 + 5;
+
+            piece.style.left = Math.random() * 100 + "vw";
+            piece.style.width = size + "px";
+            piece.style.height = size * 1.5 + "px";
+
+            piece.style.backgroundColor =
+                colors[Math.floor(Math.random() * colors.length)];
+
+            piece.style.borderRadius =
+                Math.random() > 0.5 ? "50%" : "2px";
+
+            piece.style.animationDuration =
+                (Math.random() * 2 + 2) + "s";
+
+            piece.style.animationDelay =
+                (Math.random() * 0.7) + "s";
+
+            document.body.appendChild(piece);
+
+            setTimeout(() => {
+                piece.remove();
+            }, 5000);
+        }
     }
 </script>
+
+</body>
+</html>
