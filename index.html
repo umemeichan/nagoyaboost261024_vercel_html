@@ -1,11 +1,67 @@
 <!DOCTYPE html>
-<html lang="jp">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello, world!</title>
+    <title>おみくじアプリ</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            background: #f5f5f5;
+            margin-top: 100px;
+        }
+
+        h1 {
+            color: #d32f2f;
+        }
+
+        button {
+            font-size: 20px;
+            padding: 10px 30px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            background: #ff9800;
+            color: white;
+        }
+
+        button:hover {
+            background: #f57c00;
+        }
+
+        #result {
+            margin-top: 40px;
+            font-size: 40px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
-    <h1>Hello, world!</h1>
-</body>
-</html>
+
+<h1>🎋 おみくじ 🎋</h1>
+
+<button onclick="drawFortune()">
+    おみくじを引く
+</button>
+
+<div id="result">？？？</div>
+
+<script>
+    function drawFortune() {
+        const fortunes = [
+            "🎉 大吉",
+            "😊 中吉",
+            "🙂 小吉",
+            "😌 吉",
+            "😐 末吉",
+            "😅 凶",
+            "💀 大凶"
+        ];
+
+        const index = Math.floor(Math.random() * fortunes.length);
+
+        document.getElementById("result").textContent = fortunes[index];
+    }
+</script>
